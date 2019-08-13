@@ -64,12 +64,32 @@ function play(e) {
 
 
     if(e.target.classList.contains('seed-container-p1') && game.playerOne.isTurnToPlay === true) {
+
+        playedContainer(e);
         
-
-
-
-
     } else if (e.target.classList.contains('seed-container-p2') && game.playerTwo.isTurnToPlay === true){
-        console.log(e.target.id)
+        
+        playedContainer(e);
+    }
+}
+
+function playedContainer(e) {
+    let clickedContainerValue = parseFloat(e.target.innerText);
+    let clickedPositionOnBoard = parseFloat(e.target.id.replace('seedCount', ''));
+    let lastElementFilled;
+
+    for(let i = clickedContainerValue; i>0; i--) {
+
+        if(document.getElementById(`seedCount${clickedPositionOnBoard}`) === document.getElementById('seedCount12')) {
+            clickedPositionOnBoard = 1;
+            document.getElementById(`seedCount${clickedPositionOnBoard}`).innerText = parseFloat(document.getElementById(`seedCount${clickedPositionOnBoard}`).innerText) +1;
+            e.target.innerText -= 1;
+            lastElementFilled = document.getElementById(`seedCount${clickedPositionOnBoard}`);
+
+        } else {
+            document.getElementById(`seedCount${++clickedPositionOnBoard}`).innerText = parseFloat(document.getElementById(`seedCount${clickedPositionOnBoard}`).innerText) + 1;
+            e.target.innerText -= 1;
+            lastElementFilled = document.getElementById(`seedCount${clickedPositionOnBoard}`);
+        }
     }
 }
