@@ -2,14 +2,6 @@ const game = new Game();
 
 document.getElementById('start').addEventListener('click', startGame);
 
-/****** Set Up The Board Game *******/
-
-let playerOneBoardGameSide = [...document.querySelectorAll('.seed-container-p1')]
-let playerTwoBoardGameSide = [...document.querySelectorAll('.seed-container-p2')]
-
-const boardGame = [playerOneBoardGameSide.reverse(), playerTwoBoardGameSide];
-
-
 /******************** Start Game Setup ******************/
 
 function startGame() {
@@ -66,11 +58,23 @@ function play(e) {
     if(e.target.classList.contains('seed-container-p1') && game.playerOne.isTurnToPlay === true) {
 
         playedContainer(e);
+
+        //console.log(lastElement.lastElementFilled);
+
+        updateScore(lastElement.lastElementFilled, 'seed-container-p1');
+
+        turnChangePlayer('p1');
         
     } else if (e.target.classList.contains('seed-container-p2') && game.playerTwo.isTurnToPlay === true){
         
         playedContainer(e);
-    }
+
+        //console.log(lastElement.lastElementFilled);
+
+        updateScore(lastElement.lastElementFilled, 'seed-container-p2');
+
+        turnChangePlayer('p2');
+    };
 }
 
 function playedContainer(e) {
@@ -91,5 +95,50 @@ function playedContainer(e) {
             e.target.innerText -= 1;
             lastElementFilled = document.getElementById(`seedCount${clickedPositionOnBoard}`);
         }
+    }
+
+    return lastElement = {
+        lastElementFilled: lastElementFilled
+    }
+}
+
+function updateScore(lastElement, className) {
+    if(className === 'seed-container-p1' && lastElement.classList.contains('seed-container-p2') ) {
+        console.log(lastElement);
+        let positionOnBoard = lastElement.id.replace('seedCount', '');
+
+        while(lastElement.classList.contains('seed-container-p2') && (lastElement.innerText == 2 || lastElement.innerText == 3)) {
+            game.playerOne.score += parseFloat(lastElement.innerText);
+            lastElement.innerText = 0;
+            document.querySelector('.score-player-one').innerText = game.playerOne.score;
+            lastElement = document.getElementById(`seedCount${--positionOnBoard}`);
+            console.log(game.playerOne.score)
+        }
+    } else if (className === 'seed-container-p2' && lastElement.classList.contains('seed-container-p1')) {
+        let positionOnBoard = lastElement.id.replace('seedCount', '');
+
+        while(lastElement.classList.contains('seed-container-p1') && (lastElement.innerText == 2 || lastElement.innerText == 3)) {
+            game.playerTwo.score += parseFloat(lastElement.innerText);
+            lastElement.innerText = 0;
+            document.querySelector('.score-player-two').innerText = game.playerTwo.score;
+            lastElement = document.getElementById(`seedCount${--positionOnBoard}`);
+            
+            if (lastElement === null) break;
+            
+        }
+    }
+}
+
+function turnChangePlayer(player) {
+    if (player === 'p1') {
+        game.playerOne.isTurnToPlay = false;
+        game.playerTwo.isTurnToPlay = true;
+        document.querySelector('.container-player2').style.background = '#313cda';
+        document.querySelector('.container-player1').style.background = '#fff';
+    } else {
+        game.playerOne.isTurnToPlay = true;
+        game.playerTwo.isTurnToPlay = false;
+        document.querySelector('.container-player1').style.background = '#e62d2d';
+        document.querySelector('.container-player2').style.background = '#fff';
     }
 }
