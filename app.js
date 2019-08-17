@@ -12,7 +12,6 @@ function startGame() {
 
         game.gameStarted = true;
     }
-
 }
 
 function fillSeedContainer() {
@@ -54,26 +53,25 @@ for(let i = 0; i<seedContainers.length; i++) {
 
 function play(e) {
 
-
     if(e.target.classList.contains('seed-container-p1') && game.playerOne.isTurnToPlay === true) {
 
         playedContainer(e);
 
-        //console.log(lastElement.lastElementFilled);
-
         updateScore(lastElement.lastElementFilled, 'seed-container-p1');
 
         turnChangePlayer('p1');
+
+        checkVictory('p1');
         
     } else if (e.target.classList.contains('seed-container-p2') && game.playerTwo.isTurnToPlay === true){
         
         playedContainer(e);
 
-        //console.log(lastElement.lastElementFilled);
-
         updateScore(lastElement.lastElementFilled, 'seed-container-p2');
 
         turnChangePlayer('p2');
+
+        checkVictory('p2');
     };
 }
 
@@ -104,7 +102,6 @@ function playedContainer(e) {
 
 function updateScore(lastElement, className) {
     if(className === 'seed-container-p1' && lastElement.classList.contains('seed-container-p2') ) {
-        console.log(lastElement);
         let positionOnBoard = lastElement.id.replace('seedCount', '');
 
         while(lastElement.classList.contains('seed-container-p2') && (lastElement.innerText == 2 || lastElement.innerText == 3)) {
@@ -112,7 +109,6 @@ function updateScore(lastElement, className) {
             lastElement.innerText = 0;
             document.querySelector('.score-player-one').innerText = game.playerOne.score;
             lastElement = document.getElementById(`seedCount${--positionOnBoard}`);
-            console.log(game.playerOne.score)
         }
     } else if (className === 'seed-container-p2' && lastElement.classList.contains('seed-container-p1')) {
         let positionOnBoard = lastElement.id.replace('seedCount', '');
@@ -140,5 +136,13 @@ function turnChangePlayer(player) {
         game.playerTwo.isTurnToPlay = false;
         document.querySelector('.container-player1').style.background = '#e62d2d';
         document.querySelector('.container-player2').style.background = '#fff';
+    }
+}
+
+function checkVictory(player) {
+    if(game.playerOne.score > 24) {
+        alert('Player 1 WINS!!!')
+    } else if (game.playerTwo.score > 24) {
+        alert('Player 2 WINS!!!')
     }
 }
