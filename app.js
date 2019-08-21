@@ -152,11 +152,9 @@ function checkVictory() {
 		alert('Player 1 WINS!!!');
 	} else if (game.playerTwo.score > 24) {
 		alert('Player 2 WINS!!!');
+	} else if ( (game.playerOne.score && game.playerTwo.score) === 24) {
+		console.log('It\'s a tie');
 	}
-}
-
-function gameEnd() {
-
 }
 
 function isPlayerCampEmpty(player, opponent) {
@@ -198,9 +196,9 @@ function isPlayerCampEmpty(player, opponent) {
 						base.innerText = 0;
 						document.querySelector('.score-player-two').innerText = game.playerTwo.score;
 					}
-
-                })
-				alert('cant feed, game end')
+				})
+				
+			alert('Can\'t feed opponent, game end')
             checkVictory();
         }
 	}
