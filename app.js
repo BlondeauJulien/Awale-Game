@@ -74,7 +74,7 @@ function play(e) {
 	}
 }
 
-function playedContainer(e, typeEvent) {
+function playedContainer(e, eventName) {
 	let clickedContainerValue = parseFloat(e.target.innerText);
 	let clickedPositionOnBoard = parseFloat(e.target.id.replace('seedCount', ''));
 	let lastElementFilled;
@@ -82,13 +82,13 @@ function playedContainer(e, typeEvent) {
 	for (let i = clickedContainerValue; i > 0; i--) {
 		if (document.getElementById(`seedCount${clickedPositionOnBoard}`) === document.getElementById('seedCount12')) {
 			clickedPositionOnBoard = 1;
-			if(typeEvent === 'click') {
+			if(eventName === 'click') {
 				document.getElementById(`seedCount${clickedPositionOnBoard}`).innerText = parseFloat(document.getElementById(`seedCount${clickedPositionOnBoard}`).innerText) + 1;
 				e.target.innerText -= 1;
 			}
 			lastElementFilled = document.getElementById(`seedCount${clickedPositionOnBoard}`);
 		} else {
-			if(typeEvent === 'click') {
+			if(eventName === 'click') {
 				document.getElementById(`seedCount${++clickedPositionOnBoard}`).innerText = parseFloat(document.getElementById(`seedCount${clickedPositionOnBoard}`).innerText) + 1;
 				e.target.innerText -= 1;
 			} else {
@@ -97,34 +97,47 @@ function playedContainer(e, typeEvent) {
 			lastElementFilled = document.getElementById(`seedCount${clickedPositionOnBoard}`);
 		}
 	}
-	lastElementFilled.style.background = '#fff'
+	if(lastElementFilled) lastElementFilled.style.background = '#fff';
 
 	return lastElementFilled;
 }
 
-function updateScore(lastElement, className) {
+function updateScore(lastElement, className, eventName) {
+	let seeds = [2,3]; 
+	if (eventName === 'hover') seeds = [1,2]
+
 	if (className === 'seed-container-p1' && lastElement.classList.contains('seed-container-p2')) {
 		let positionOnBoard = lastElement.id.replace('seedCount', '');
 
-		while (
-			lastElement.classList.contains('seed-container-p2') &&
-			(lastElement.innerText == 2 || lastElement.innerText == 3)
-		) {
-			game.playerOne.score += parseFloat(lastElement.innerText);
-			lastElement.innerText = 0;
-			document.querySelector('.score-player-one').innerText = game.playerOne.score;
+		while (lastElement.classList.contains('seed-container-p2') &&
+			(lastElement.innerText == seeds[0] || lastElement.innerText == seeds[1])) {
+
+			if(eventName === 'hover') {
+				lastElement.style.color = '#12ad07'
+			} else {
+				game.playerOne.score += parseFloat(lastElement.innerText);
+				lastElement.innerText = 0;
+				document.querySelector('.score-player-one').innerText = game.playerOne.score;
+				lastElement.style.color = '#000';
+			}
+
 			lastElement = document.getElementById(`seedCount${--positionOnBoard}`);
 		}
 	} else if (className === 'seed-container-p2' && lastElement.classList.contains('seed-container-p1')) {
 		let positionOnBoard = lastElement.id.replace('seedCount', '');
 
-		while (
-			lastElement.classList.contains('seed-container-p1') &&
-			(lastElement.innerText == 2 || lastElement.innerText == 3)
-		) {
-			game.playerTwo.score += parseFloat(lastElement.innerText);
-			lastElement.innerText = 0;
-			document.querySelector('.score-player-two').innerText = game.playerTwo.score;
+		while (lastElement.classList.contains('seed-container-p1') &&
+			(lastElement.innerText == seeds[0] || lastElement.innerText == seeds[1])) {
+				
+			if(eventName === 'hover') {
+				lastElement.style.color = '#12ad07'
+			} else {
+				game.playerTwo.score += parseFloat(lastElement.innerText);
+				lastElement.innerText = 0;
+				document.querySelector('.score-player-two').innerText = game.playerTwo.score;
+				lastElement.style.color = '#000';
+			}
+
 			lastElement = document.getElementById(`seedCount${--positionOnBoard}`);
 
 			if (lastElement === null) break;
@@ -149,23 +162,26 @@ function turnChangePlayer(player) {
 	}
 }
 
-
 // ++++++ Preview Event +++++++++
 
 function playPreview(e) {
-	if(game.gameStarted) {
-		let lastElement = playedContainer(e, 'hover');
+	let lastElement = playedContainer(e, 'hover');
+	if(game.gameStarted && lastElement !== undefined) {
+
 		if (e.target.classList.contains('seed-container-p1') && game.playerOne.isTurnToPlay === true) {
 			lastElement.style.background = '#9cfff8';
+			updateScore(lastElement, 'seed-container-p1', 'hover');
 		} else if (e.target.classList.contains('seed-container-p2') && game.playerTwo.isTurnToPlay === true) {
 			lastElement.style.background = '#9cfff8';
+			updateScore(lastElement, 'seed-container-p2', 'hover');
 		}
 	}
 }
 
 function suppressPlayPreview() {
 	for (let i = 0; i < seedContainers.length; i++) {
-		seedContainers[i].style.background = '#fff'
+		seedContainers[i].style.background = '#fff';
+		seedContainers[i].style.color = 'black';
 	}
 }
 
