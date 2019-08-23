@@ -75,7 +75,8 @@ table {
 }
 
 .seed-container-p1, .seed-container-p2 {
-    padding: 32px 36px;
+    width: 100%;
+    padding: 32px 36px; 
     font-size: 2rem;
     align-self: center;
 }
