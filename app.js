@@ -5,13 +5,15 @@ document.getElementById('start').addEventListener('click', startGame);
 /******************** Start Game Setup ******************/
 
 function startGame() {
-	if (game.gameStarted === false) {
-		fillSeedContainer();
-		initializeScores();
-		pickStartingPlayer();
+	game.playerOne.score = 0;
+	game.playerTwo.score = 0;
 
-		game.gameStarted = true;
-	}
+	fillSeedContainer();
+	initializeScores();
+	pickStartingPlayer();
+
+	game.gameStarted = true;
+	document.getElementById('start').innerText = 'Start New Game'
 }
 
 function fillSeedContainer() {
@@ -19,6 +21,7 @@ function fillSeedContainer() {
 	for (let i = 0; i < seedContainers.length; i++) {
 		seedContainers[i].innerText = '4';
 	}
+
 }
 
 function initializeScores() {
@@ -32,13 +35,9 @@ function pickStartingPlayer() {
 	let flipACoin = Math.floor(Math.random() * 2);
 
 	if (flipACoin === 0) {
-		game.playerOne.isTurnToPlay = true;
-		game.playerTwo.isTurnToPlay = false;
-		document.querySelector('.container-player1').style.background = '#e62d2d';
+		turnChangePlayer('p1');
 	} else {
-		game.playerOne.isTurnToPlay = false;
-		game.playerTwo.isTurnToPlay = true;
-		document.querySelector('.container-player2').style.background = '#313cda';
+		turnChangePlayer('p2');
 	}
 }
 
@@ -56,8 +55,7 @@ function play(e) {
 
 		updateScore(lastElement.lastElementFilled, 'seed-container-p1');
 
-		turnChangePlayer('p1');
-
+		turnChangePlayer('p2');
 
 		checkVictory();
 	} else if (e.target.classList.contains('seed-container-p2') && game.playerTwo.isTurnToPlay === true) {
@@ -65,8 +63,7 @@ function play(e) {
 
 		updateScore(lastElement.lastElementFilled, 'seed-container-p2');
 
-		turnChangePlayer('p2');
-
+		turnChangePlayer('p1');
 
 		checkVictory();
 	}
@@ -130,18 +127,20 @@ function updateScore(lastElement, className) {
 function turnChangePlayer(player) {
 	if (player === 'p1') {
 
-		game.playerOne.isTurnToPlay = false;
-		game.playerTwo.isTurnToPlay = true;
-		document.querySelector('.container-player2').style.background = '#313cda';
-		document.querySelector('.container-player1').style.background = '#fff';
-		isPlayerCampEmpty('p1', 'p2');
-	} else {
-
 		game.playerOne.isTurnToPlay = true;
 		game.playerTwo.isTurnToPlay = false;
 		document.querySelector('.container-player1').style.background = '#e62d2d';
 		document.querySelector('.container-player2').style.background = '#fff';
 		isPlayerCampEmpty('p2', 'p1');
+
+
+	} else {
+		game.playerOne.isTurnToPlay = false;
+		game.playerTwo.isTurnToPlay = true;
+		document.querySelector('.container-player2').style.background = '#313cda';
+		document.querySelector('.container-player1').style.background = '#fff';
+		isPlayerCampEmpty('p1', 'p2');
+
 	}
 }
 
