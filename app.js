@@ -5,6 +5,8 @@ document.getElementById('start').addEventListener('click', startGame);
 /******************** Start Game Setup ******************/
 
 function startGame() {
+	loadEventListener()
+
 	game.playerOne.score = 0;
 	game.playerTwo.score = 0;
 
@@ -21,7 +23,6 @@ function fillSeedContainer() {
 	for (let i = 0; i < seedContainers.length; i++) {
 		seedContainers[i].innerText = '4';
 	}
-
 }
 
 function initializeScores() {
@@ -43,12 +44,13 @@ function pickStartingPlayer() {
 
 /******************* Gameplay  ******************************/
 
-let seedContainers = document.querySelectorAll('.seed-container');
-
-for (let i = 0; i < seedContainers.length; i++) {
-	seedContainers[i].addEventListener('click', play);
-	seedContainers[i].addEventListener('mouseover', playPreview);
-	seedContainers[i].addEventListener('mouseleave', suppressPlayPreview)
+function loadEventListener() {
+		let seedContainers = document.querySelectorAll('.seed-container');
+		for (let i = 0; i < seedContainers.length; i++) {
+			seedContainers[i].addEventListener('click', play);
+			seedContainers[i].addEventListener('mouseover', playPreview);
+			seedContainers[i].addEventListener('mouseleave', suppressPlayPreview)
+		}
 }
 
 function play(e) {
@@ -179,6 +181,7 @@ function playPreview(e) {
 }
 
 function suppressPlayPreview() {
+	let seedContainers = document.querySelectorAll('.seed-container');
 	for (let i = 0; i < seedContainers.length; i++) {
 		seedContainers[i].style.background = '#fff';
 		seedContainers[i].style.color = 'black';
@@ -205,7 +208,10 @@ function isPlayerCampEmpty(player, opponent) {
 
 	for (let i = 0; i < playerCamp.length; i++) {
 		totalSeeds += parseFloat(playerCamp[i].innerText);
-		if (totalSeeds > 0) break;
+		if (totalSeeds > 0) {
+			loadEventListener();
+			break;
+		}
 	}
 
 	if (totalSeeds === 0) {
@@ -219,25 +225,29 @@ function isPlayerCampEmpty(player, opponent) {
 		for (let i = 0; i < opponentCamp.length; i++) {
 			if (opponentCamp[i].innerText > i) {
 				canFeed = true;
-				break;
+				opponentCamp[i].addEventListener('click', play);
+				opponentCamp[i].addEventListener('mouseover', playPreview);
+				opponentCamp[i].addEventListener('mouseleave', suppressPlayPreview);
+			} else {
+				opponentCamp[i].removeEventListener('click', play);
+				opponentCamp[i].removeEventListener('mouseover', playPreview);
+				opponentCamp[i].removeEventListener('mouseleave', suppressPlayPreview)
 			}
         }
         
         if(!canFeed) {
+			opponentCamp.forEach(base => {
 
-                opponentCamp.forEach(base => {
-
-					if(opponent === 'p1') {
-						game.playerOne.score += parseFloat(base.innerText);
-						base.innerText = 0;
-						document.querySelector('.score-player-one').innerText = game.playerOne.score;
-					} else {
-						game.playerTwo.score += parseFloat(base.innerText);
-						base.innerText = 0;
-						document.querySelector('.score-player-two').innerText = game.playerTwo.score;
-					}
-				})
-				
+				if(opponent === 'p1') {
+					game.playerOne.score += parseFloat(base.innerText);
+					base.innerText = 0;
+					document.querySelector('.score-player-one').innerText = game.playerOne.score;
+				} else {
+					game.playerTwo.score += parseFloat(base.innerText);
+					base.innerText = 0;
+					document.querySelector('.score-player-two').innerText = game.playerTwo.score;
+				}
+			});			
 			alert(`Can't feed opponent, game end`)
             checkVictory();
         }
