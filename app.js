@@ -195,8 +195,8 @@ function checkVictory() {
 		alert('Player 1 WINS!!!');
 	} else if (game.playerTwo.score > 24) {
 		alert('Player 2 WINS!!!');
-	} else if ( (game.playerOne.score && game.playerTwo.score) === 24) {
-		console.log(`It's a tie`);
+	} else if (game.playerOne.score === 24 && game.playerTwo.score === 24) {
+		alert(`It's a tie`);
 	}
 }
 
