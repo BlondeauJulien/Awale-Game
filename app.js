@@ -60,17 +60,17 @@ function play(e) {
 
 		playedContainer(e, 'click');
 
-		updateScore(lastElementFilled, 'seed-container-p1');
-
 		turnChangePlayer('p2');
+
+		updateScore(lastElementFilled, 'seed-container-p1');
 
 		checkVictory();
 	} else if (e.target.classList.contains('seed-container-p2') && game.playerTwo.isTurnToPlay === true) {
 		playedContainer(e, 'click');
 
-		updateScore(lastElementFilled, 'seed-container-p2');
-
 		turnChangePlayer('p1');
+
+		updateScore(lastElementFilled, 'seed-container-p2');
 
 		checkVictory();
 	}
@@ -192,12 +192,27 @@ function suppressPlayPreview() {
 
 function checkVictory() {
 	if (game.playerOne.score > 24) {
+		endEventListener()
 		alert('Player 1 WINS!!!');
 	} else if (game.playerTwo.score > 24) {
+		endEventListener()
 		alert('Player 2 WINS!!!');
 	} else if (game.playerOne.score === 24 && game.playerTwo.score === 24) {
+		endEventListener()
 		alert(`It's a tie`);
 	}
+}
+
+function endEventListener() {
+	let seedContainers = document.querySelectorAll('.seed-container');
+	for (let i = 0; i < seedContainers.length; i++) {
+		seedContainers[i].removeEventListener('click', play);
+		seedContainers[i].removeEventListener('mouseover', playPreview);
+		seedContainers[i].removeEventListener('mouseleave', suppressPlayPreview)
+	}
+
+	document.querySelector('.container-player1').style.background = '#fff';
+	document.querySelector('.container-player2').style.background = '#fff';
 }
 
 function isPlayerCampEmpty(player, opponent) {
