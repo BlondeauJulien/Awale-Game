@@ -56,23 +56,25 @@ function loadEventListener() {
 function play(e) {
 	let lastElementFilled = playedContainer(e);
 
-	if (e.target.classList.contains('seed-container-p1') && game.playerOne.isTurnToPlay === true) {
+	if(e.target.innerText > 0) {
+		if (e.target.classList.contains('seed-container-p1') && game.playerOne.isTurnToPlay === true) {
 
-		playedContainer(e, 'click');
-
-		turnChangePlayer('p2');
-
-		updateScore(lastElementFilled, 'seed-container-p1');
-
-		checkVictory();
-	} else if (e.target.classList.contains('seed-container-p2') && game.playerTwo.isTurnToPlay === true) {
-		playedContainer(e, 'click');
-
-		turnChangePlayer('p1');
-
-		updateScore(lastElementFilled, 'seed-container-p2');
-
-		checkVictory();
+			playedContainer(e, 'click');
+	
+			turnChangePlayer('p2');
+	
+			updateScore(lastElementFilled, 'seed-container-p1');
+	
+			checkVictory();
+		} else if (e.target.classList.contains('seed-container-p2') && game.playerTwo.isTurnToPlay === true) {
+			playedContainer(e, 'click');
+	
+			turnChangePlayer('p1');
+	
+			updateScore(lastElementFilled, 'seed-container-p2');
+	
+			checkVictory();
+		}
 	}
 }
 
