@@ -7,9 +7,6 @@ document.getElementById('start').addEventListener('click', startGame);
 function startGame() {
 	loadEventListener()
 
-	game.playerOne.score = 0;
-	game.playerTwo.score = 0;
-
 	fillSeedContainer();
 	initializeScores();
 	pickStartingPlayer();
@@ -30,6 +27,9 @@ function initializeScores() {
 	for (let i = 0; i < scores.length; i++) {
 		scores[i].innerText = 0;
 	}
+	
+	game.playerOne.score = 0;
+	game.playerTwo.score = 0;
 }
 
 function pickStartingPlayer() {
@@ -42,16 +42,16 @@ function pickStartingPlayer() {
 	}
 }
 
-/******************* Gameplay  ******************************/
-
 function loadEventListener() {
-		let seedContainers = document.querySelectorAll('.seed-container');
-		for (let i = 0; i < seedContainers.length; i++) {
-			seedContainers[i].addEventListener('click', play);
-			seedContainers[i].addEventListener('mouseover', playPreview);
-			seedContainers[i].addEventListener('mouseleave', suppressPlayPreview)
-		}
+	let seedContainers = document.querySelectorAll('.seed-container');
+	for (let i = 0; i < seedContainers.length; i++) {
+		seedContainers[i].addEventListener('click', play);
+		seedContainers[i].addEventListener('mouseover', playPreview);
+		seedContainers[i].addEventListener('mouseleave', suppressPlayPreview)
+	}
 }
+
+/******************* Gameplay  ******************************/
 
 function play(e) {
 	let lastElementFilled = playedContainer(e);
