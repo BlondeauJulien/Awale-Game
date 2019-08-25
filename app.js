@@ -7,7 +7,7 @@ document.getElementById('start').addEventListener('click', startGame);
 function startGame() {
 	loadEventListener()
 
-	//fillSeedContainer();
+	fillSeedContainer();
 	initializeScores();
 	pickStartingPlayer();
 
@@ -63,7 +63,7 @@ function play(e) {
 	
 			turnChangePlayer('p2');
 	
-			updateScore(lastElementFilled, 'seed-container-p1');
+			updateScore(lastElementFilled, 'seed-container-p1', 'click');
 	
 			checkVictory();
 		} else if (e.target.classList.contains('seed-container-p2') && game.playerTwo.isTurnToPlay === true) {
@@ -71,7 +71,7 @@ function play(e) {
 	
 			turnChangePlayer('p1');
 	
-			updateScore(lastElementFilled, 'seed-container-p2');
+			updateScore(lastElementFilled, 'seed-container-p2', 'click');
 	
 			checkVictory();
 		}
@@ -127,7 +127,7 @@ function updateScore(lastElement, className, eventName) {
 
 			lastElement = document.getElementById(`seedCount${--positionOnBoard}`);
 		}
-		isPlayerCampEmpty('p1', 'p2');
+		if(eventName === 'click') isPlayerCampEmpty('p1', 'p2');
 
 	} else if (className === 'seed-container-p2' && lastElement.classList.contains('seed-container-p1')) {
 		let positionOnBoard = lastElement.id.replace('seedCount', '');
@@ -149,7 +149,7 @@ function updateScore(lastElement, className, eventName) {
 			if (lastElement === null) break;
 		}
 
-		isPlayerCampEmpty('p2', 'p1');
+		if(eventName === 'click') isPlayerCampEmpty('p2', 'p1');
 	}
 }
 
@@ -223,30 +223,40 @@ function isPlayerCampEmpty(player, opponent) {
 	let playerCamp = document.querySelectorAll(`.seed-container-${player}`);
 	let opponentCamp = document.querySelectorAll(`.seed-container-${opponent}`);
 
-	let totalSeeds = 0;
+	let totalSeedsPlayer = 0;
+	let totalSeedsOpponent = 0;
 
 	for (let i = 0; i < playerCamp.length; i++) {
-		totalSeeds += parseFloat(playerCamp[i].innerText);
-		if (totalSeeds > 0) {
+		totalSeedsPlayer += parseFloat(playerCamp[i].innerText);
+		if (totalSeedsPlayer > 0) {
 			loadEventListener();
 			break;
-		} else {
-  			playerCamp.forEach(base => {
-
-				if(opponent === 'p1') {
-					game.playerTwo.score += parseFloat(base.innerText);
-					base.innerText = 0;
-					document.querySelector('.score-player-two').innerText = game.playerTwo.score;
-				} else {
-					game.playerOne.score += parseFloat(base.innerText);
-					base.innerText = 0;
-					document.querySelector('.score-player-one').innerText = game.playerOne.score;
-				}
-			});	 	 	
-		}
+		} 
 	}
 
-	if (totalSeeds === 0) {
+	for(let i = 0; i < opponentCamp.length; i++) {
+		totalSeedsOpponent += parseFloat(opponentCamp[i].innerText);
+	}
+
+	if(totalSeedsOpponent === 0) {
+		playerCamp.forEach(base => {
+
+			if(opponent === 'p1') {
+				game.playerTwo.score += parseFloat(base.innerText);
+				base.innerText = 0;
+				document.querySelector('.score-player-two').innerText = game.playerTwo.score;
+			} else {
+				game.playerOne.score += parseFloat(base.innerText);
+				base.innerText = 0;
+				document.querySelector('.score-player-one').innerText = game.playerOne.score;
+			}
+		});
+		checkVictory();
+		alert(`opponent starved, game end`)
+		return
+	}
+
+	if (totalSeedsPlayer === 0) {
 		let canFeed = false;
 
 		if (opponent === 'p2') {
