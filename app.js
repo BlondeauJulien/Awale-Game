@@ -239,7 +239,6 @@ function isPlayerCampEmpty(player, opponent) {
 				document.querySelector('.score-player-one').innerText = game.playerOne.score;
 			}
 		});
-		checkVictory();
 		alert(`opponent starved, game end`)
 		return
 	}
@@ -264,7 +263,6 @@ function isPlayerCampEmpty(player, opponent) {
 				}
 			});			
 			alert(`Can't feed opponent, game end`)
-            checkVictory();
         }
 	}
 }
