@@ -7,7 +7,7 @@ document.getElementById('start').addEventListener('click', startGame);
 function startGame() {
 	loadEventListener()
 
-	fillSeedContainer();
+	//fillSeedContainer();
 	initializeScores();
 	pickStartingPlayer();
 
@@ -264,18 +264,8 @@ function isPlayerCampEmpty(player, opponent) {
 			opponentCamp.reverse();
 		}
 
-		for (let i = 0; i < opponentCamp.length; i++) {
-			if (opponentCamp[i].innerText > i) {
-				canFeed = true;
-				opponentCamp[i].addEventListener('click', play);
-				opponentCamp[i].addEventListener('mouseover', playPreview);
-				opponentCamp[i].addEventListener('mouseleave', suppressPlayPreview);
-			} else {
-				opponentCamp[i].removeEventListener('click', play);
-				opponentCamp[i].removeEventListener('mouseover', playPreview);
-				opponentCamp[i].removeEventListener('mouseleave', suppressPlayPreview)
-			}
-        }
+		//Will update the eventListener for next turn and return true or false.
+		canFeed = eventListenerIfCanFeed(opponentCamp);
         
         if(!canFeed) {
 			opponentCamp.forEach(base => {
@@ -294,4 +284,21 @@ function isPlayerCampEmpty(player, opponent) {
             checkVictory();
         }
 	}
+}
+
+function eventListenerIfCanFeed(camp) {
+	let canFeed = false;
+	for (let i = 0; i < camp.length; i++) {
+		if (camp[i].innerText > i) {
+			canFeed = true;
+			camp[i].addEventListener('click', play);
+			camp[i].addEventListener('mouseover', playPreview);
+			camp[i].addEventListener('mouseleave', suppressPlayPreview);
+		} else {
+			camp[i].removeEventListener('click', play);
+			camp[i].removeEventListener('mouseover', playPreview);
+			camp[i].removeEventListener('mouseleave', suppressPlayPreview)
+		}
+	}
+	return canFeed;
 }
