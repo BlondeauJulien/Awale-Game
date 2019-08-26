@@ -7,7 +7,7 @@ document.getElementById('start').addEventListener('click', startGame);
 function startGame() {
 	loadEventListener()
 
-	//fillSeedContainer();
+	fillSeedContainer();
 	initializeScores();
 	pickStartingPlayer();
 
@@ -223,20 +223,8 @@ function isPlayerCampEmpty(player, opponent) {
 	let playerCamp = document.querySelectorAll(`.seed-container-${player}`);
 	let opponentCamp = document.querySelectorAll(`.seed-container-${opponent}`);
 
-	let totalSeedsPlayer = 0;
-	let totalSeedsOpponent = 0;
-
-	for (let i = 0; i < playerCamp.length; i++) {
-		totalSeedsPlayer += parseFloat(playerCamp[i].innerText);
-		if (totalSeedsPlayer > 0) {
-			loadEventListener();
-			break;
-		} 
-	}
-
-	for(let i = 0; i < opponentCamp.length; i++) {
-		totalSeedsOpponent += parseFloat(opponentCamp[i].innerText);
-	}
+	let totalSeedsPlayer = countSeeds(playerCamp, true);
+	let totalSeedsOpponent = countSeeds(opponentCamp, false);
 
 	if(totalSeedsOpponent === 0) {
 		playerCamp.forEach(base => {
@@ -298,4 +286,17 @@ function eventListenerIfCanFeed(camp) {
 		}
 	}
 	return canFeed;
+}
+
+function countSeeds(camp, isPlayer) {
+	let totalSeeds = 0;
+	for (let i = 0; i < camp.length; i++) {
+		totalSeeds += parseFloat(camp[i].innerText);
+		console.log(camp[i].id + ' ' + totalSeeds + ' ' + isPlayer)
+		if (isPlayer && totalSeeds > 0) {
+			loadEventListener();
+			return totalSeeds
+		} 
+	}
+	return totalSeeds;
 }
