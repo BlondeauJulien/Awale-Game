@@ -259,10 +259,7 @@ function isPlayerCampEmpty(player, opponent) {
 	if (totalSeedsPlayer === 0) {
 		let canFeed = false;
 
-		if (opponent === 'p2') {
-			opponentCamp = Array.from(opponentCamp);
-			opponentCamp.reverse();
-		}
+		if (opponent === 'p2') opponentCamp = Array.from(opponentCamp).reverse();
 
 		//Will update the eventListener for next turn and return true or false.
 		canFeed = eventListenerIfCanFeed(opponentCamp);
