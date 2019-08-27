@@ -288,7 +288,6 @@ function countSeeds(camp, isPlayer) {
 	let totalSeeds = 0;
 	for (let i = 0; i < camp.length; i++) {
 		totalSeeds += parseFloat(camp[i].innerText);
-		console.log(camp[i].id + ' ' + totalSeeds + ' ' + isPlayer)
 		if (isPlayer && totalSeeds > 0) {
 			loadEventListener();
 			return totalSeeds
